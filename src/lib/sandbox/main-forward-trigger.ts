@@ -8,8 +8,13 @@ export const mainForwardTrigger = (worker: PartytownWebWorker, $winId$: WinId, w
   let i: number;
   let mainForwardFn: any;
 
-  let forwardCall = ($forward$: string[], args: any) =>
-    worker.postMessage([
+  let forwardCall = ($forward$: string[], args: any) => {
+    // bad hack to "push" the datas inside the dataLayer
+    if ($forward$[0] === 'dataLayer' && $forward$[1] === 'push') {
+      win.dataLayer = win.dataLayer || [];
+      win.dataLayer.splice(win.dataLayer.length, 0, args[0]);
+    }
+    return worker.postMessage([
       WorkerMessageType.ForwardMainTrigger,
       {
         $winId$,
@@ -17,6 +22,7 @@ export const mainForwardTrigger = (worker: PartytownWebWorker, $winId$: WinId, w
         $args$: serializeForWorker($winId$, Array.from(args)),
       },
     ]);
+  }
 
   win._ptf = undefined;
 

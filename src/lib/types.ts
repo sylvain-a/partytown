@@ -529,6 +529,7 @@ export interface ApplyHookOptions extends HookOptions {
 export interface MainWindow extends Window {
   partytown?: PartytownConfig;
   _ptf?: any[];
+  dataLayer?: any[];
 }
 
 export const enum NodeName {
